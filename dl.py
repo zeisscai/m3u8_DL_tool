@@ -37,38 +37,6 @@ def extract_key_info(m3u8_content):
         print(f"解析m3u8文件时出错: {str(e)}")
         return None
 
-def run_command_with_output(command):
-    """执行命令并实时输出日志"""
-    print(f"执行命令: {command}")
-    try:
-        # 使用Popen实时获取输出
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        
-        # 实时读取标准输出和标准错误
-        while True:
-            stdout_line = process.stdout.readline()
-            stderr_line = process.stderr.readline()
-            
-            if stdout_line:
-                print(stdout_line, end='')  # 实时输出标准输出
-            if stderr_line:
-                print(stderr_line, end='')  # 实时输出标准错误
-            
-            # 检查进程是否结束
-            if process.poll() is not None and not stdout_line and not stderr_line:
-                break
-        
-        # 获取最终返回码
-        return_code = process.wait()
-        if return_code == 0:
-            print("N_m3u8DL-RE 执行成功")
-        else:
-            print(f"N_m3u8DL-RE 执行失败，返回码: {return_code}")
-        return return_code == 0
-    except Exception as e:
-        print(f"执行N_m3u8DL-RE时出错: {str(e)}")
-        return False
-
 def main():
     # 获取用户输入的链接
     m3u8_url = input("请输入m3u8链接: ").strip()
@@ -108,10 +76,22 @@ def main():
         print("步骤3失败：无法下载密钥文件，程序退出")
         return
 
-    # 步骤4：执行N_m3u8DL-RE命令并实时输出
+    # 步骤4：执行N_m3u8DL-RE命令
     command = f'./N_m3u8DL-RE "{m3u8_url}" --key-text-file "{key_filename}"'
-    if not run_command_with_output(command):
-        print("步骤4失败：N_m3u8DL-RE执行未成功完成")
+    print(f"即将执行命令: {command}")
+    
+    try:
+        process = subprocess.run(command, shell=True, text=True, capture_output=True)
+        if process.returncode == 0:
+            print("N_m3u8DL-RE 执行成功")
+            print("输出信息:")
+            print(process.stdout)
+        else:
+            print("N_m3u8DL-RE 执行失败")
+            print(f"错误码: {process.returncode}")
+            print(f"错误输出: {process.stderr}")
+    except Exception as e:
+        print(f"执行N_m3u8DL-RE时出错: {str(e)}")
 
     # 清理临时文件（可选）
     try:
