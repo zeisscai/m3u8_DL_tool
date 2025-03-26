@@ -1,6 +1,6 @@
 # m3u8_DL_tool
 一个特定场景使用的 m3u8 下载脚本。
-使用环境：[N_m3u8DL-RE](https://github.com/nilaoda/N_m3u8DL-CLI)，[ffmgpe](https://ffmpeg.org/download.html),,[mp4decrypt](https://www.bento4.com/downloads/),python3.11,mac m1。
+使用环境：[N_m3u8DL-RE](https://github.com/nilaoda/N_m3u8DL-CLI)，[ffmgpe](https://ffmpeg.org/download.html)，[mp4decrypt](https://www.bento4.com/downloads/)，python3.11，mac m1。
 
 实现功能：
 1.你填一个 m3u8 链接然后下载它。
